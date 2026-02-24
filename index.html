@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message Sender</title>
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+    <script>
+        async function main() {
+            // 1. LIFFの初期化
+            await liff.init({ liffId: "2008386112-wvah7qJd" });
+
+            // 2. ログインチェック
+            if (!liff.isLoggedIn()) {
+                liff.login();
+                return;
+            }
+
+            // 3. メッセージの送信
+            try {
+                await liff.sendMessages([
+                    {
+                        type: 'text',
+                        text: 'LINE特典'
+                    }
+                ]);
+                // 4. 送信成功したらウィンドウを閉じる
+                liff.closeWindow();
+            } catch (error) {
+                console.error('送信失敗:', error);
+                alert('エラーが発生しました: ' + error.message);
+            }
+        }
+        main();
+    </script>
+</body>
+</html>
