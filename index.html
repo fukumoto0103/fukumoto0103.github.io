@@ -3,35 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Message Sender</title>
+    <title>早期LINE登録特典</title>
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        /* 全体設定 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        /* モーダル背景（オーバーレイ） */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* モーダルコンテンツ */
+        .modal-content {
+            width: 90%;
+            max-width: 400px;
+            max-height: 90vh;
+            background-color: #FFEA2E; /* 画像の黄色 */
+            border-radius: 15px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* ヘッダー */
+        .modal-header {
+            background-color: #4CC2E4; /* 画像の水色 */
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .modal-header h1 { font-size: 18px; margin: 0; }
+        .modal-header p { font-size: 12px; margin: 5px 0 0; font-weight: bold; }
+
+        /* カードデザイン */
+        .modal-body { padding: 15px; }
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .card-tag {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .card-tag small { margin-left: auto; font-size: 10px; color: #666; }
+
+        /* 特典内容の枠 */
+        .benefit-box {
+            border: 2px dashed #4CC2E4;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            color: #4CC2E4;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        .benefit-box strong { font-size: 20px; color: #4CC2E4; }
+
+        /* ステップ表示 */
+        .step-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .step-item {
+            background: #E1F5FE;
+            padding: 5px 8px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* 抽選セクション */
+        .gold-card { border: 2px solid #FFA000; }
+
+        /* 閉じるボタン */
+        .close-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #333;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            text-align: center;
+            color: #333;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+    </style>
 </head>
 <body>
+
+    <div id="campaign-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>🎁 LINE限定特典キャンペーン</h1>
+                <p>特典は“早いほどおトク”! 今すぐ参加しよう✨</p>
+            </div>
+
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-tag">🎉 初回キャンペーン <small>(2026年4月30日まで)</small></div>
+                    <div class="benefit-box">
+                        ▶ <strong>3,000円分</strong>の<br>「青本」購入クーポンを贈呈
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-tag">📅 イベントキャンペーン</div>
+                    <p style="font-size: 12px; margin: 5px 0;">参加回数に応じて最大<strong>1万円分</strong>にアップ！</p>
+                    <div class="step-container">
+                        <div class="step-item">2回: 5千円</div>
+                        <span>→</span>
+                        <div class="step-item">4回: 7千円</div>
+                        <span>→</span>
+                        <div class="step-item">6回: 1万円</div>
+                    </div>
+                </div>
+
+                <div class="card gold-card">
+                    <div class="card-tag">🎯 抽選キャンペーン</div>
+                    <p style="font-size: 13px; margin: 0;"><strong>「青本」全9科目セット</strong>を<br>抽選で100名様にプレゼント！</p>
+                </div>
+
+                <div class="footer-text">
+                    ＼ 今すぐ登録して、特典を取りこぼさずGETしよう！ ／<br>
+                    最新情報を受け取れるよう、LINEはそのままで！
+                </div>
+            </div>
+
+            <button class="close-btn" onclick="liff.closeWindow()">内容を確認して戻る</button>
+        </div>
+    </div>
+
     <script>
         async function main() {
-            // 1. LIFFの初期化
+            // LIFFの初期化
             await liff.init({ liffId: "2008386112-wvah7qJd" });
 
-            // 2. ログインチェック
+            // ログインしていない場合はログインさせる（念のため）
             if (!liff.isLoggedIn()) {
                 liff.login();
                 return;
             }
-
-            // 3. メッセージの送信
-            try {
-                await liff.sendMessages([
-                    {
-                        type: 'text',
-                        text: 'LINE特典'
-                    }
-                ]);
-                // 4. 送信成功したらウィンドウを閉じる
-                liff.closeWindow();
-            } catch (error) {
-                console.error('送信失敗:', error);
-                alert('エラーが発生しました: ' + error.message);
-            }
+            
+            // 今回はメッセージ送信不要なので、モーダルを表示したままユーザーの操作を待つ
         }
         main();
     </script>
